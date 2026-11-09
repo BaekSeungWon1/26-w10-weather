@@ -1,4 +1,4 @@
-/* 실시간 날씨 및 미세먼지 대시보드 스타일 */
+/* 실시간 날씨 및 미세먼지 완성형 대시보드 스타일 */
 
 .weather-dashboard {
   width: 100%;
@@ -9,7 +9,7 @@
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 /* 1. 헤더 스타일 */
@@ -19,7 +19,6 @@
   align-items: flex-start;
   flex-wrap: wrap;
   gap: 16px;
-  padding-bottom: 8px;
 }
 
 .badge-pill {
@@ -98,16 +97,158 @@
   cursor: not-allowed;
 }
 
-/* 2. 도시 빠른 선택 버튼 바 */
+/* 2. 도시 검색 섹션 (디바운스 & 드롭다운) */
+.search-section {
+  width: 100%;
+  position: relative;
+  z-index: 50;
+}
+
+.city-search-container {
+  position: relative;
+  width: 100%;
+}
+
+.search-input-wrapper {
+  display: flex;
+  align-items: center;
+  background: var(--bg);
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.search-input-wrapper:focus-within {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+.search-icon {
+  color: var(--text);
+  margin-right: 12px;
+  flex-shrink: 0;
+}
+
+.search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-size: 15px;
+  color: var(--text-h);
+  outline: none;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: var(--text);
+  opacity: 0.7;
+}
+
+.search-spinner {
+  color: #3b82f6;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+.clear-btn {
+  background: none;
+  border: none;
+  color: var(--text);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+}
+
+.clear-btn:hover {
+  color: var(--text-h);
+}
+
+/* 검색 드롭다운 */
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+  list-style: none;
+  padding: 8px;
+  margin: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  z-index: 100;
+}
+
+.search-dropdown-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.search-dropdown-item:hover {
+  background: var(--code-bg);
+}
+
+.item-main {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-icon {
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.item-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.item-admin {
+  font-size: 13px;
+  color: var(--text);
+}
+
+.item-country {
+  font-size: 12px;
+  color: var(--text);
+  background: var(--code-bg);
+  padding: 2px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+}
+
+.search-empty-item {
+  padding: 16px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--text);
+}
+
+/* 3. 도시 빠른 선택 버튼 바 */
 .city-selector-section {
   width: 100%;
   overflow-x: auto;
-  padding-bottom: 6px;
+  padding-bottom: 4px;
 }
 
 .city-buttons-wrapper {
   display: flex;
-  gap: 10px;
+  gap: 8px;
   min-width: max-content;
 }
 
@@ -115,16 +256,16 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 18px;
-  font-size: 14px;
+  padding: 8px 16px;
+  font-size: 13.5px;
   font-weight: 600;
-  border-radius: 12px;
+  border-radius: 10px;
   border: 1px solid var(--border);
   background: var(--bg);
   color: var(--text);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 
 .city-btn:hover {
@@ -137,12 +278,18 @@
   background: #2563eb;
   color: #ffffff;
   border-color: #2563eb;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.28);
 }
 
-/* 3. 메인 대시보드 카드 그리드 */
+/* 4. 메인 대시보드 레이아웃 */
 .dashboard-content {
   width: 100%;
+}
+
+.dashboard-sections {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
 .cards-grid {
@@ -161,11 +308,11 @@
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 20px;
-  padding: 28px;
+  padding: 26px;
   box-shadow: var(--shadow);
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -181,28 +328,34 @@
 }
 
 .card-tag {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.6px;
   color: var(--text);
 }
 
 .city-name {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
   color: var(--text-h);
   margin: 4px 0 0;
+}
+
+.city-country {
+  font-size: 16px;
+  font-weight: 400;
+  color: var(--text);
 }
 
 /* 날씨 상태 뱃지 */
 .weather-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
+  gap: 6px;
+  padding: 6px 12px;
   border-radius: 9999px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
 }
 
@@ -210,11 +363,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0 8px;
+  padding: 6px 0 4px;
 }
 
 .current-temp {
-  font-size: 64px;
+  font-size: 60px;
   font-weight: 800;
   line-height: 1;
   color: var(--text-h);
@@ -222,14 +375,14 @@
 }
 
 .current-temp .unit {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 500;
   margin-left: 2px;
   color: var(--text);
 }
 
 .apparent-temp {
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text);
   margin-top: 8px;
 }
@@ -242,16 +395,16 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.08));
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.08));
 }
 
 /* 기상 지표 리스트 */
 .metrics-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  gap: 10px;
   background: var(--code-bg);
-  padding: 16px;
+  padding: 14px;
   border-radius: 14px;
   border: 1px solid var(--border);
 }
@@ -259,12 +412,12 @@
 .metric-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .metric-icon {
-  width: 36px;
-  height: 36px;
+  width: 34px;
+  height: 34px;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -288,13 +441,13 @@
 
 .metric-label {
   display: block;
-  font-size: 12px;
+  font-size: 11px;
   color: var(--text);
 }
 
 .metric-value {
   display: block;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--text-h);
 }
@@ -304,18 +457,18 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 9999px;
-  font-size: 14px;
+  font-size: 13.5px;
   font-weight: 700;
   color: #ffffff;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
 }
 
 .air-metrics-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 16px;
+  gap: 12px;
 }
 
 @media (max-width: 520px) {
@@ -328,10 +481,10 @@
   background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 16px;
+  padding: 14px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 6px;
 }
 
 .air-box-header {
@@ -341,13 +494,13 @@
 }
 
 .air-name {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--text);
 }
 
 .air-grade {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 700;
 }
 
@@ -358,25 +511,25 @@
 }
 
 .value-number {
-  font-size: 32px;
+  font-size: 28px;
   font-weight: 800;
   line-height: 1;
   color: var(--text-h);
 }
 
 .value-unit {
-  font-size: 13px;
+  font-size: 12px;
   color: var(--text);
   font-weight: 500;
 }
 
 .progress-bar-bg {
   width: 100%;
-  height: 8px;
+  height: 6px;
   background: rgba(0, 0, 0, 0.08);
   border-radius: 9999px;
   overflow: hidden;
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 .progress-bar-fill {
@@ -386,18 +539,214 @@
 }
 
 .air-guide {
-  font-size: 11px;
+  font-size: 10.5px;
   color: var(--text);
 }
 
 .air-action-tip {
-  padding: 14px 16px;
+  padding: 12px 14px;
   border-radius: 12px;
   background: rgba(59, 130, 246, 0.08);
   border: 1px solid rgba(59, 130, 246, 0.2);
-  font-size: 13px;
+  font-size: 12.5px;
   line-height: 1.5;
   color: var(--text-h);
+}
+
+/* 5. 24시간 시간별 기온 차트 스타일 */
+.hourly-chart-card {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chart-meta-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text);
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+}
+
+.chart-scroll-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 8px;
+  scrollbar-width: thin;
+}
+
+.chart-scroll-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.chart-scroll-wrapper::-webkit-scrollbar-track {
+  background: var(--code-bg);
+  border-radius: 3px;
+}
+
+.chart-scroll-wrapper::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+
+.hourly-svg {
+  display: block;
+}
+
+.chart-temp-text {
+  font-size: 12.5px;
+  font-weight: 700;
+  fill: var(--text-h);
+}
+
+.chart-time-text {
+  font-size: 11.5px;
+  fill: var(--text);
+  font-weight: 500;
+}
+
+.chart-time-text.current-time {
+  fill: #2563eb;
+  font-weight: 700;
+}
+
+.chart-footer-guide {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text);
+  opacity: 0.8;
+  margin-top: 4px;
+}
+
+/* 6. 주간 예보 카드 스타일 */
+.weekly-forecast-card {
+  width: 100%;
+}
+
+.weekly-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.weekly-item {
+  display: grid;
+  grid-template-columns: 80px 140px 70px 1fr;
+  align-items: center;
+  padding: 10px 14px;
+  border-radius: 12px;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.weekly-item:hover {
+  background: rgba(59, 130, 246, 0.05);
+}
+
+.weekly-item.today-item {
+  border-color: rgba(37, 99, 235, 0.35);
+  background: rgba(37, 99, 235, 0.04);
+}
+
+.weekly-date-col {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.weekly-day {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-h);
+}
+
+.weekly-date {
+  font-size: 11.5px;
+  color: var(--text);
+}
+
+.weekly-weather-col {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.weekly-weather-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-h);
+}
+
+.weekly-rain-col {
+  display: flex;
+  align-items: center;
+}
+
+.rain-prob {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #0284c7;
+}
+
+.rain-prob.zero {
+  color: var(--text);
+  opacity: 0.5;
+}
+
+.weekly-temp-bar-col {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.temp-min {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 600;
+  width: 28px;
+  text-align: right;
+}
+
+.temp-max {
+  font-size: 13px;
+  color: var(--text-h);
+  font-weight: 700;
+  width: 28px;
+}
+
+.temp-bar-track {
+  flex: 1;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.08);
+  border-radius: 9999px;
+  position: relative;
+  overflow: hidden;
+}
+
+.temp-bar-fill {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #60a5fa, #f97316);
+  border-radius: 9999px;
+}
+
+@media (max-width: 600px) {
+  .weekly-item {
+    grid-template-columns: 70px 1fr 60px;
+    gap: 8px;
+  }
+  .weekly-temp-bar-col {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+  }
 }
 
 /* 로딩 & 에러 공통 상태 카드 */
@@ -471,7 +820,7 @@
   color: #ef4444;
 }
 
-/* 4. 푸터 스타일 */
+/* 7. 푸터 스타일 */
 .dashboard-footer {
   margin-top: 8px;
   padding-top: 16px;
