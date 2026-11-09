@@ -5,7 +5,7 @@ import { Clock } from 'lucide-react'
 /**
  * 24시간 시간별 기온 변화를 보여주는 경량 SVG 꺾은선 차트 컴포넌트
  */
-export default function HourlyChart({ hourly }) {
+export default function HourlyChart({ hourly, tempUnit = 'C' }) {
   // 렌더링 순수성(Purity) 유지를 위해 초기 마운트 시 시간 상태 보관
   const [currentHour] = useState(() => new Date().getHours())
 
@@ -27,14 +27,16 @@ export default function HourlyChart({ hourly }) {
     return times.map((t, i) => {
       const hourNum = parseInt(t.slice(11, 13), 10)
       const isNow = i === 0
+      const celsius = temps[i]
+      const converted = tempUnit === 'F' ? Math.round((celsius * 9) / 5 + 32) : Math.round(celsius)
       return {
         timeStr: isNow ? '지금' : `${hourNum}시`,
-        temp: Math.round(temps[i]),
-        rawTemp: temps[i],
+        temp: converted,
+        rawTemp: converted,
         weatherCode: codes[i] || 0,
       }
     })
-  }, [hourly, currentHour])
+  }, [hourly, currentHour, tempUnit])
 
   if (chartData.length === 0) return null
 

@@ -8,7 +8,7 @@ const DAY_NAMES = ['일', '월', '화', '수', '목', '금', '토']
 /**
  * 7일간 주간 날씨 예보 컴포넌트
  */
-export default function WeeklyForecast({ daily }) {
+export default function WeeklyForecast({ daily, tempUnit = 'C' }) {
   const forecastList = useMemo(() => {
     if (!daily || !daily.time) return []
 
@@ -24,8 +24,10 @@ export default function WeeklyForecast({ daily }) {
 
       const code = daily.weather_code ? daily.weather_code[idx] : 0
       const weather = getWeatherInfo(code)
-      const minTemp = Math.round(daily.temperature_2m_min[idx])
-      const maxTemp = Math.round(daily.temperature_2m_max[idx])
+      const minC = daily.temperature_2m_min[idx]
+      const maxC = daily.temperature_2m_max[idx]
+      const minTemp = tempUnit === 'F' ? Math.round((minC * 9) / 5 + 32) : Math.round(minC)
+      const maxTemp = tempUnit === 'F' ? Math.round((maxC * 9) / 5 + 32) : Math.round(maxC)
       const precipProb = daily.precipitation_probability_max
         ? daily.precipitation_probability_max[idx]
         : 0
@@ -40,7 +42,7 @@ export default function WeeklyForecast({ daily }) {
         precipProb,
       }
     })
-  }, [daily])
+  }, [daily, tempUnit])
 
   if (forecastList.length === 0) return null
 
@@ -116,3 +118,4 @@ export default function WeeklyForecast({ daily }) {
     </section>
   )
 }
+

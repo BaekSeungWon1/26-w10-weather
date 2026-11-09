@@ -85,3 +85,4 @@ export default function AirQualityCard({ currentAir, airStatus }) {
     </section>
   )
 }
+

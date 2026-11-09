@@ -4,8 +4,12 @@ import { Thermometer, Droplets, Wind } from 'lucide-react'
 /**
  * 현재 날씨 카드 컴포넌트
  */
-export default function CurrentWeather({ current, cityName, country, weatherInfo }) {
+export default function CurrentWeather({ current, cityName, country, weatherInfo, tempUnit = 'C' }) {
   if (!current || !weatherInfo) return null
+
+  // 단위에 따른 기온 변환
+  const displayTemp = tempUnit === 'F' ? Math.round((current.temperature_2m * 9) / 5 + 32) : Math.round(current.temperature_2m)
+  const displayApparent = tempUnit === 'F' ? Math.round((current.apparent_temperature * 9) / 5 + 32) : Math.round(current.apparent_temperature)
 
   return (
     <section className="card weather-card">
@@ -29,11 +33,11 @@ export default function CurrentWeather({ current, cityName, country, weatherInfo
       <div className="weather-main">
         <div className="temperature-group">
           <span className="current-temp">
-            {Math.round(current.temperature_2m)}
-            <span className="unit">°C</span>
+            {displayTemp}
+            <span className="unit">°{tempUnit}</span>
           </span>
           <p className="apparent-temp">
-            체감온도 <strong>{Math.round(current.apparent_temperature)}°C</strong>
+            체감온도 <strong>{displayApparent}°{tempUnit}</strong>
           </p>
         </div>
         <div className="weather-icon-large">

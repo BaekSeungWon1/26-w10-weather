@@ -1,5 +1,6 @@
 /* 실시간 날씨 및 미세먼지 완성형 대시보드 스타일 */
 
+/* 대시보드 기본 컨테이너 및 옵션 A 동적 테마 배경 */
 .weather-dashboard {
   width: 100%;
   max-width: 1040px;
@@ -9,7 +10,34 @@
   text-align: left;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 18px;
+  border-radius: 28px;
+  transition: background 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.8s ease;
+}
+
+/* 옵션 A: 날씨 및 낮/밤에 따른 5대 동적 비주얼 테마 */
+.weather-dashboard.theme-clear-day {
+  background: linear-gradient(145deg, rgba(239, 246, 255, 0.75) 0%, rgba(254, 243, 199, 0.45) 50%, rgba(224, 242, 254, 0.7) 100%);
+}
+
+.weather-dashboard.theme-night {
+  background: linear-gradient(145deg, rgba(15, 23, 42, 0.85) 0%, rgba(30, 27, 75, 0.8) 50%, rgba(15, 23, 42, 0.9) 100%);
+}
+
+.weather-dashboard.theme-rain {
+  background: linear-gradient(145deg, rgba(240, 249, 255, 0.75) 0%, rgba(224, 242, 254, 0.6) 50%, rgba(219, 234, 254, 0.75) 100%);
+}
+
+.weather-dashboard.theme-cloudy {
+  background: linear-gradient(145deg, rgba(241, 245, 249, 0.8) 0%, rgba(226, 232, 240, 0.6) 50%, rgba(203, 213, 225, 0.65) 100%);
+}
+
+.weather-dashboard.theme-snow {
+  background: linear-gradient(145deg, rgba(248, 250, 252, 0.85) 0%, rgba(238, 242, 255, 0.65) 50%, rgba(224, 231, 255, 0.7) 100%);
+}
+
+.weather-dashboard.theme-thunder {
+  background: linear-gradient(145deg, rgba(250, 245, 255, 0.8) 0%, rgba(243, 232, 255, 0.65) 50%, rgba(233, 213, 255, 0.75) 100%);
 }
 
 /* 1. 헤더 스타일 */
@@ -47,7 +75,7 @@
 }
 
 .header-subtitle {
-  font-size: 15px;
+  font-size: 14.5px;
   color: var(--text);
   margin: 0;
 }
@@ -55,8 +83,36 @@
 .header-meta {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   flex-wrap: wrap;
+}
+
+/* 옵션 D: 섭씨/화씨 단위 변환 토글 */
+.unit-toggle-group {
+  display: inline-flex;
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.unit-toggle-btn {
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  border: none;
+  background: transparent;
+  color: var(--text);
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.unit-toggle-btn.active {
+  background: #2563eb;
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
 }
 
 .last-updated {
@@ -65,7 +121,7 @@
   gap: 6px;
   font-size: 13px;
   color: var(--text);
-  background: var(--code-bg);
+  background: var(--bg);
   padding: 6px 12px;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -75,8 +131,8 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  font-size: 14px;
+  padding: 7px 14px;
+  font-size: 13.5px;
   font-weight: 600;
   border-radius: 8px;
   border: 1px solid var(--border);
@@ -239,6 +295,79 @@
   color: var(--text);
 }
 
+/* 옵션 B: 최근 본 도시 섹션 */
+.recent-cities-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  padding: 4px 2px;
+}
+
+.recent-cities-header {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.recent-cities-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.recent-city-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px 4px 12px;
+  border-radius: 9999px;
+  font-size: 12.5px;
+  font-weight: 600;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+}
+
+.recent-city-chip:hover {
+  background: var(--code-bg);
+  color: var(--text-h);
+  border-color: #3b82f6;
+}
+
+.recent-city-chip.active {
+  background: rgba(37, 99, 235, 0.12);
+  color: #2563eb;
+  border-color: #2563eb;
+}
+
+.chip-remove-btn {
+  background: none;
+  border: none;
+  padding: 2px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  color: var(--text);
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.15s, background 0.15s;
+}
+
+.chip-remove-btn:hover {
+  opacity: 1;
+  background: rgba(0, 0, 0, 0.08);
+}
+
 /* 3. 도시 빠른 선택 버튼 바 */
 .city-selector-section {
   width: 100%;
@@ -289,13 +418,13 @@
 .dashboard-sections {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .cards-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 24px;
+  gap: 20px;
 }
 
 @media (max-width: 840px) {
@@ -314,6 +443,7 @@
   flex-direction: column;
   gap: 18px;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  backdrop-filter: blur(8px);
 }
 
 .card:hover {
