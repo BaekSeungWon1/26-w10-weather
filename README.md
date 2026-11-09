@@ -56,8 +56,8 @@ Open-Meteo 공개 HTTPS API를 연동하여 전 세계 실시간 기상 관측 �
 
 ## 🚀 실행 및 배포 링크
 
-- **Netlify 배포 URL**: `https://baekseungwon1-weather.netlify.app`
-- **GitHub Pages 배포 URL**: `https://baekseungwon1.github.io/26-w10-weather/`
+- **Netlify 배포 URL**: `https://26-w10-weather-poly.netlify.app` *(또는 Netlify 배포 후 자동 생성된 URL)*
+- **GitHub Pages 배포 URL**: `https://BaekSeungWon1.github.io/26-w10-weather/`
 
 > 💡 **로컬 개발 서버 실행 방법**:
 > ```bash
