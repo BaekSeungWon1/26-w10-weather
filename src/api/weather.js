@@ -20,6 +20,54 @@ export const DEFAULT_CITIES = [
   { name: '제주', lat: 33.4996, lon: 126.5312 },
 ];
 
+// 한글 도시명 영문 매핑 (Open-Meteo Geocoding API의 영문 검색 지원 보완)
+const KOREAN_CITY_NAME_MAP = {
+  '서울': 'Seoul',
+  '서울시': 'Seoul',
+  '서울특별시': 'Seoul',
+  '부산': 'Busan',
+  '부산시': 'Busan',
+  '부산광역시': 'Busan',
+  '인천': 'Incheon',
+  '인천시': 'Incheon',
+  '인천광역시': 'Incheon',
+  '대구': 'Daegu',
+  '대구시': 'Daegu',
+  '대구광역시': 'Daegu',
+  '대전': 'Daejeon',
+  '대전시': 'Daejeon',
+  '대전광역시': 'Daejeon',
+  '광주': 'Gwangju',
+  '광주시': 'Gwangju',
+  '광주광역시': 'Gwangju',
+  '울산': 'Ulsan',
+  '울산시': 'Ulsan',
+  '울산광역시': 'Ulsan',
+  '세종': 'Sejong',
+  '세종시': 'Sejong',
+  '세종특별자치시': 'Sejong',
+  '수원': 'Suwon',
+  '수원시': 'Suwon',
+  '성남': 'Seongnam',
+  '성남시': 'Seongnam',
+  '제주': 'Jeju',
+  '제주시': 'Jeju',
+  '제주도': 'Jeju',
+  '제주특별자치도': 'Jeju',
+  '강릉': 'Gangneung',
+  '강릉시': 'Gangneung',
+  '춘천': 'Chuncheon',
+  '춘천시': 'Chuncheon',
+  '전주': 'Jeonju',
+  '전주시': 'Jeonju',
+  '청주': 'Cheongju',
+  '청주시': 'Cheongju',
+  '포항': 'Pohang',
+  '포항시': 'Pohang',
+  '창원': 'Changwon',
+  '창원시': 'Changwon',
+};
+
 /**
  * WMO (세계기상기구) 날씨 코드 한국어 변환
  */
@@ -74,6 +122,8 @@ export function getAirQualityStatus(pm10, pm25) {
 
 /**
  * Open-Meteo 날씨 정보 조회 (현재 날씨 + 시간별 예보 + 7일간 일별 예보)
+ * @param {number} lat 위도
+ * @param {number} lon 경도
  */
 export async function fetchWeatherData(lat, lon) {
   const url = `https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max&timezone=Asia%2FSeoul`;
@@ -90,8 +140,13 @@ export async function fetchWeatherData(lat, lon) {
   }
 }
 
+// getWeather 별칭 함수 제공
+export const getWeather = fetchWeatherData;
+
 /**
  * Open-Meteo 공기질(미세먼지) 정보 조회
+ * @param {number} lat 위도
+ * @param {number} lon 경도
  */
 export async function fetchAirQualityData(lat, lon) {
   const url = `https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&current=pm10,pm2_5,european_aqi&timezone=Asia%2FSeoul`;
@@ -108,14 +163,62 @@ export async function fetchAirQualityData(lat, lon) {
   }
 }
 
+// getAirQuality 별칭 함수 제공
+export const getAirQuality = fetchAirQualityData;
+
 /**
- * Open-Meteo 도시 검색 (Geocoding API)
- * 라틴 영문(Seoul, Busan 등) 검색을 기본 지원합니다.
+ * 도시 이름으로 위도/경도 좌표 검색 (Geocoding API)
+ * @param {string} cityName 검색할 도시 이름 (예: "Seoul", "서울", "Tokyo")
+ * @returns {Promise<{name: string, lat: number, lon: number, latitude: number, longitude: number, country?: string} | null>}
+ */
+export async function getCoordinates(cityName) {
+  if (!cityName || !cityName.trim()) {
+    return null;
+  }
+
+  const trimmed = cityName.trim();
+  // 한글 도시명인 경우 매핑된 영문명 우선 검색, 없으면 입력값 그대로 검색
+  const searchQuery = KOREAN_CITY_NAME_MAP[trimmed] || trimmed;
+  const encodedQuery = encodeURIComponent(searchQuery);
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodedQuery}&count=1&language=ko&format=json`;
+
+  try {
+    const res = await fetch(url);
+    if (!res.ok) {
+      throw new Error(`위치 검색 API 응답 오류 (HTTP ${res.status})`);
+    }
+    const data = await res.json();
+    if (!data.results || data.results.length === 0) {
+      return null;
+    }
+
+    const first = data.results[0];
+    return {
+      name: first.name,
+      lat: first.latitude,
+      lon: first.longitude,
+      latitude: first.latitude,
+      longitude: first.longitude,
+      country: first.country,
+      admin1: first.admin1,
+    };
+  } catch (err) {
+    console.error('좌표 검색 실패:', err);
+    throw err;
+  }
+}
+
+/**
+ * Open-Meteo 도시 검색 (Geocoding API 다중 결과 반환)
+ * @param {string} query 검색어
+ * @returns {Promise<Array>} 검색 결과 리스트
  */
 export async function searchCities(query) {
   if (!query || query.trim().length < 2) return [];
 
-  const encodedQuery = encodeURIComponent(query.trim());
+  const trimmed = query.trim();
+  const searchQuery = KOREAN_CITY_NAME_MAP[trimmed] || trimmed;
+  const encodedQuery = encodeURIComponent(searchQuery);
   const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodedQuery}&count=5&language=ko&format=json`;
 
   try {
